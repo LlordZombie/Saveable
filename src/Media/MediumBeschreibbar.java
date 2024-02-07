@@ -1,10 +1,12 @@
 package Media;
 
+import java.util.Arrays;
+
 public class MediumBeschreibbar extends MediumNurLesbar {
     private final long length;
 
     protected MediumBeschreibbar(long length, double bitfehlerrate) {
-        super(new byte[(int) ((length / 2147483647) + 1)][2147483647], bitfehlerrate);
+        super(new byte[(int) ((length / 2147483645) + 1)][2147483645], bitfehlerrate);
         this.length = length;
     }
 
@@ -13,11 +15,11 @@ public class MediumBeschreibbar extends MediumNurLesbar {
         for (byte[] bytes : datenNeu) {
             newKap += bytes.length;
         }
-        if (newKap> getKapazitaet()){
+        if (newKap > getKapazitaet()) {
             throw new IllegalArgumentException("Too much data");
         }
-        for (long i = start; i < newKap; i++) {
-
+        for (int i = (int) (start / 2147483645); i < newKap / 2147483645; i++) {
+            daten[i] = Arrays.copyOf(datenNeu[i], 2147483645);
         }
 
     }
@@ -41,8 +43,8 @@ public class MediumBeschreibbar extends MediumNurLesbar {
     }
 
     private void changeLastLen() {
-        if (daten[daten.length - 1].length != length % 2147483647) {
-            daten[daten.length - 1] = new byte[(int) (length % 2147483647)];
+        if (daten[daten.length - 1].length != length % 2147483645) {
+            daten[daten.length - 1] = new byte[(int) (length % 2147483645)];
         }
     }
 }
