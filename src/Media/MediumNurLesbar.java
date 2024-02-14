@@ -1,23 +1,47 @@
 package Media;
 
-
 import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+/**
+ * Represents a medium that is only readable.
+ */
 class MediumNurLesbar {
+    /** The data stored in the medium. */
     protected byte[] daten;
+
+    /** The probability of a bit error occurring. */
     protected double bitfehlerrate;
 
+    /**
+     * Constructs a new MediumNurLesbar with the given data and bit error rate.
+     *
+     * @param daten the data to be stored in the medium
+     * @param bitfehlerrate the probability of a bit error occurring
+     */
     protected MediumNurLesbar(byte[] daten, double bitfehlerrate) {
         this.bitfehlerrate = bitfehlerrate;
         this.daten = Arrays.copyOf(daten, daten.length);
     }
 
+    /**
+     * Returns the capacity of the medium (number of bytes).
+     *
+     * @return the capacity of the medium
+     */
     public long getKapazitaet() {
         return daten.length;
     }
 
+    /**
+     * Reads a specified portion of data from the medium.
+     *
+     * @param start the starting index from where to read
+     * @param lng the length of data to be read
+     * @return the read data as byte array
+     * @throws IllegalArgumentException if the requested data exceeds the available data
+     */
     public byte[] lesen(int start, int lng) {
         if (start + lng > getKapazitaet())
             throw new IllegalArgumentException("There is less Data than you want to read");
@@ -32,11 +56,20 @@ class MediumNurLesbar {
         return Arrays.copyOfRange(daten, start, start + lng);
     }
 
-
+    /**
+     * Returns the bit error rate of the medium.
+     *
+     * @return the bit error rate of the medium
+     */
     public double getBitfehlerrate() {
         return bitfehlerrate;
     }
 
+    /**
+     * Returns a string representation of the medium.
+     *
+     * @return a string representation of the medium
+     */
     public String toString() {
         return getClass().getSimpleName() + ": Daten:" + Arrays.toString(daten) + ", Kapazität: " + getKapazitaet() + ", Bitfehlerrate: " + getBitfehlerrate();
     }
