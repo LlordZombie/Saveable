@@ -11,14 +11,14 @@ public class UsbStick extends MediumBeschreibbar {
 
     public void schreiben(int start, byte[] datenNeu) {
         opsDone++;
-        if (opsDone >= schreibzyklen) bitfehlerrate *= bitfehlerrate < 1 ? 1.1 : 1;
+        bitfehlerrate *= (opsDone >= schreibzyklen) ? (bitfehlerrate < 1 ? 1.1 : 1) : 1;
         super.schreiben(start, datenNeu);
     }
 
     @Override
     public byte[] lesen(int start, int lng) {
         opsDone++;
-        if (opsDone >= schreibzyklen) bitfehlerrate *= bitfehlerrate < 1 ? 1.1 : 1;
+        bitfehlerrate *= (opsDone >= schreibzyklen) ? (bitfehlerrate < 1 ? 1.1 : 1) : 1;
         return super.lesen(start, lng);
     }
 
