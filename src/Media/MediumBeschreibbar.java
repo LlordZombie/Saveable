@@ -1,50 +1,18 @@
 package Media;
 
-import java.util.Arrays;
+class MediumBeschreibbar extends MediumNurLesbar {
 
-public class MediumBeschreibbar extends MediumNurLesbar {
-    private final long length;
-
-    protected MediumBeschreibbar(long length, double bitfehlerrate) {
-        super(new byte[(int) ((length / 2147483645) + 1)][2147483645], bitfehlerrate);
-        this.length = length;
+    protected MediumBeschreibbar(int length, double bitfehlerrate) {
+        super(new byte[length], bitfehlerrate);
     }
 
-    protected void schreiben(long start, byte[][] datenNeu) {
-        long newKap = start;
-        for (byte[] bytes : datenNeu) {
-            newKap += bytes.length;
+    public void schreiben(int start, byte[] datenNeu) {
+        if (start + datenNeu.length > getKapazitaet()) throw new IllegalArgumentException("There is not enough space");
+        for (int i = 0; i < daten.length; i++) {
+            byte bitFailure = (byte) (daten[i] ^ (1 << ((int) (Math.random() * 8))));
+            daten[i] = Math.random() < getBitfehlerrate() ? bitFailure : daten[i];
         }
-        if (newKap > getKapazitaet()) {
-            throw new IllegalArgumentException("Too much data");
-        }
-        for (int i = (int) (start / 2147483645); i < newKap / 2147483645; i++) {
-            daten[i] = Arrays.copyOf(datenNeu[i], 2147483645);
-        }
-
+        System.arraycopy(datenNeu, 0, daten, start, datenNeu.length);
     }
 
-    @Override
-    protected byte[][] lesen(long start, long lng) {
-        changeLastLen();
-        return super.lesen(start, lng);
-    }
-
-    @Override
-    protected double getBitfehlerrate() {
-        changeLastLen();
-        return super.getBitfehlerrate();
-    }
-
-    @Override
-    protected long getKapazitaet() {
-        changeLastLen();
-        return super.getKapazitaet();
-    }
-
-    private void changeLastLen() {
-        if (daten[daten.length - 1].length != length % 2147483645) {
-            daten[daten.length - 1] = new byte[(int) (length % 2147483645)];
-        }
-    }
 }
